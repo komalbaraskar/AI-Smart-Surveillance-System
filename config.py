@@ -1,0 +1,7 @@
+# Telegram Config
+TELEGRAM_TOKEN = "YOUR_BOT_TOKEN"
+CHAT_ID = "YOUR_CHAT_ID"
+
+# Detection Config
+LOITER_TIME = 120   # seconds
+CROWD_THRESHOLD = 10
