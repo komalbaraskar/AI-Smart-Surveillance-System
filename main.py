@@ -16,7 +16,7 @@ model = YOLO("yolov8n.pt")
 cap = cv2.VideoCapture(0)
 
 history = []
-sent_alerts = set() 
+sent_alerts = set()
 
 # Control DB saving frequency
 last_saved_time = 0
