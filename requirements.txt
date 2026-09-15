@@ -1,7 +1,11 @@
 ultralytics
 opencv-python
 numpy
+pandas
 flask
 deep-sort-realtime
 requests
 matplotlib
+pymongo
+face-recognition
+Pillow

@@ -14,12 +14,17 @@ load_faces()
 # YOLO + Camera
 model = YOLO("yolov8n.pt")
 cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+    print("Error: Could not open camera.")
+    exit()
 
+#variables
 history = []
 sent_alerts = set()
 
 # Control DB saving frequency
 last_saved_time = 0
+current_time = time.time()
 
 # Zone drawing
 zones = []
@@ -43,6 +48,7 @@ cv2.setMouseCallback("Detection", draw_zone)
 while True:
     ret, frame = cap.read()
     if not ret:
+        print("Error: Could not read camera frame.")
         break
 
     # YOLO DETECTION
@@ -102,9 +108,12 @@ while True:
     history.append(people_count)
 
     # Save count every 2 seconds
-    if time.time() - last_saved_time > 2:
+    current_time = time.time()
+    if current_time - last_saved_time >= 5:
         save_count(people_count)
-        last_saved_time = time.time()
+        print(f"People count saved to MongoDB: {people_count}")
+        last_saved_time = current_time
+
 
     # Overcrowding
     if people_count > CROWD_THRESHOLD:

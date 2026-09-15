@@ -1,40 +1,26 @@
-import sqlite3
+import os
+from pymongo import MongoClient
 
-conn = sqlite3.connect("data.db")
-cursor = conn.cursor()
-
-# Logs table
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS logs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    message TEXT,
-    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+MONGO_URI = os.getenv(
+    "MONGO_URI",
+    "mongodb://localhost:27017/surveillance"
 )
-""")
 
-# People count table
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS people_count (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    count INTEGER,
-    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
-""")
+client = MongoClient(MONGO_URI)
 
-conn.commit()
+db = client["surveillance"]
 
-# Save alert log
+logs = db["logs"]
+people_count = db["people_count"]
+
+
 def save_log(message):
-    cursor.execute(
-        "INSERT INTO logs (message) VALUES (?)",
-        (message,)
-    )
-    conn.commit()
+    logs.insert_one({
+        "message": message
+    })
 
-# Save people count
+
 def save_count(count):
-    cursor.execute(
-        "INSERT INTO people_count (count) VALUES (?)",
-        (count,)
-    )
-    conn.commit()
+    people_count.insert_one({
+        "count": count
+    })
