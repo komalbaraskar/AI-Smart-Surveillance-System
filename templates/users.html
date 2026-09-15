@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>User Management</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #111827;
+            color: white;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        form {
+            background: #1f2937;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        input,
+        select,
+        button {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1f2937;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #374151;
+            text-align: left;
+        }
+
+        th {
+            background: #374151;
+        }
+
+        .admin {
+            color: #60a5fa;
+        }
+
+        .security {
+            color: #34d399;
+        }
+
+        a {
+            color: #60a5fa;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>👥 User Management</h1>
+
+    <p>
+        Logged in as:
+        <strong>{{ session.username }}</strong>
+    </p>
+
+    <a href="/">
+        ← Dashboard
+    </a>
+
+    <hr>
+
+    <h2>Add User</h2>
+
+    <form
+        method="POST"
+        action="/users/add"
+    >
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            required
+        >
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+        >
+
+        <select name="role">
+
+            <option value="security">
+                Security Officer
+            </option>
+
+            <option value="admin">
+                Administrator
+            </option>
+
+        </select>
+
+        <button type="submit">
+            Add User
+        </button>
+
+    </form>
+
+
+    <h2>Existing Users</h2>
+
+    <table>
+
+        <tr>
+
+            <th>Username</th>
+            <th>Role</th>
+
+        </tr>
+
+        {% for user in users %}
+
+        <tr>
+
+            <td>
+                {{ user.username }}
+            </td>
+
+            <td>
+
+                {% if user.role == "admin" %}
+
+                <span class="admin">
+                    Administrator
+                </span>
+
+                {% else %}
+
+                <span class="security">
+                    Security Officer
+                </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+
+</html>
+
