@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from database import logs, people_count
 from flask import Flask, request, redirect, url_for, session
 from database import users, authenticate_user
@@ -189,8 +189,33 @@ def add_user():
         url_for("user_management")
     )
 
-if __name__ == "__main__":
+@app.route("/api/people-count")
+@login_required
+def people_count_api():
 
+    data = people_count.find(
+        {},
+        {
+            "_id": 0,
+            "count": 1,
+            "time": 1
+        }
+    ).sort("_id", -1).limit(30)
+
+    result = []
+
+    for item in data:
+        result.append({
+            "count": item.get("count", 0),
+            "time": str(item.get("time", ""))
+        })
+
+    # Reverse so oldest comes first
+    result.reverse()
+
+    return jsonify(result)
+
+if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=5000,

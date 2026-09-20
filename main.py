@@ -6,7 +6,7 @@ from heatmap import update_heatmap
 from alert import send_alert
 from config import CROWD_THRESHOLD
 from face_recog import load_faces, recognize_face
-from database import save_log, save_count
+from database import save_log, save_count, save_alert
 
 # Load face data
 load_faces()
@@ -93,6 +93,13 @@ while True:
                 if msg not in sent_alerts:
                     send_alert(msg)
                     save_log(msg)
+                    save_alert(
+                        alert_type="zone_intrusion",
+                        severity="high",
+                        message=msg,
+                        person_id=track_id,
+                        camera_id="CAM01"
+                    )
                     sent_alerts.add(msg)
 
         # Behavior alerts
@@ -142,7 +149,8 @@ while True:
     # DISPLAY
     cv2.imshow("Detection", frame)
     cv2.imshow("Heatmap", heatmap_img)
-
+    cv2.imwrite("static/heatmap.jpg", heatmap_img)
+    
     # EXIT
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q'):
